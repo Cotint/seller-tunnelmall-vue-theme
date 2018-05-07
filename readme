@@ -1,0 +1,3 @@
+npm install
+npm run dev in console
+http://localhost:8081(your local host)/#/test
