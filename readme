@@ -1,3 +1,4 @@
 npm install
 npm run dev in console
 http://localhost:8081(your local host)/#/test
+در صفحه اصلی روی دکمه "ثبت محصول جدید" بزنید، نتایج به صورت جدول نمایش داده می شوند.
