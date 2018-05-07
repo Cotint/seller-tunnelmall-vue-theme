@@ -8,7 +8,9 @@
       <v-tab-item class="row mt-2">
         <div class="container-fluid col-12 border-bottom div_border"></div>
         <v-card flat class="border-0 col-lg-3" v-for="(item, key) in result2">
-            <form_info :title="item.title" :input="item.input" class="p-2" v-on:click="update_form(item)"></form_info>
+            <form_info :title="item.title" :input="item.input" :id="item.id" class="p-2"
+                       @interface="handleFcAfterDateBack">
+            </form_info>
         </v-card>
         <!--<v-card flat class="border-0 col-lg-3">-->
           <!--<form_info title="نام فروشگاه" :input="result2.id" class="p-2"></form_info>-->
@@ -36,32 +38,66 @@
     components:{
       form_info,
     },
-    methods:{
-      update_form: function (item) {
-        axios.put(`/v1/shops/3`, {
-          name: "ahmad"
-        })
-      }
+    methods: {
+      next () {
+        const active = parseInt(this.active)
+        this.active = (active < 2 ? active + 1 : 0).toString()
+      },
+      handleClick(tab, event) {
+        console.log(tab, event);
+      },
+      handleFcAfterDateBack (event) {
+        console.log('data after child handle: ', event) // get the data after child dealing
+        changedInput: event;
+        var headers = { 'Content-type' : 'application/json'}
+        // axios.put(`/v1/shops/3`,
+        //     {name: event}
+        //   ,headers
+        // )
+        //   .then(response => {
+        //     console.log("I'm in axios.put",);
+        //     // console.log("result?!",result2.name);
+        //   })
+        if(event.currentTarget.id == 1){
+          console.log("I'm name with id:",event.currentTarget.value);
+          axios.put(`/v1/shops/3`,
+            {name: event.currentTarget.value}
+            ,headers
+          )
+          // _this.result2.$set(1, input = event.target.value)
+          // this.result2.push({
+          //   title:'نام فروشگاه' , input:event.target.value, id:'1'
+          // })
+        }
+        if(event.currentTarget.id == 3){
+          console.log("I'm date:",event.currentTarget.id);
+          axios.put(`/v1/shops/3`,
+            {start_date: event.currentTarget.value}
+            ,headers
+          )
+      }}
     },
     created(){
       const _this = this;
-      window.axios.get(`/v1/shops/3`)
+      var headers2 = { 'Content-type' : 'application/json','Access-Control-Allow-Origin':'*'}
+      console.log("it is result2: ",_this.result2);
+      window.axios.get(`/v1/shops/3`,headers2)
         .then(function(result){
           // _this.result2 = result.data.data;
           _this.result2.push({
-            title:'نام فروشگاه' , input:result.data.data.name,
+            title:'نام فروشگاه' , input:result.data.data.name, id:'1'
           })
           _this.result2.push({
-            title:'نام و نام خانوادگی' , input:"نام و نام خانوادگی"
+            title:'نام و نام خانوادگی' , input:'نام و نام خانوادگی' , id:'2'
           })
           _this.result2.push({
-            title:'تاریخ ثبت نام' , input:result.data.data.start_date
+            title:'تاریخ ثبت نام' , input:result.data.data.start_date , id:'3'
           })
           _this.result2.push({
-            title:'نوع' , input:result.data.data.type
+            title:'نوع' , input:result.data.data.type , id:'4'
           })
           _this.result2.push({
-            title:'کد ملی' , input:result.data.data.user.national_id
+            title:'کد ملی' , input:result.data.data.user.national_id , id:'5'
           })
           _this.result2.push({
             title:'تلفن' , input:result.data.data.user.phone
@@ -90,7 +126,7 @@
           // _this.result2.push({
           //   title:'عضویت در خبرنامه' , "ندارد"
           // })
-          console.log("hiiii",result.data);
+          // console.log("hiiii",result.data);
         })},
 
     data () {
@@ -114,18 +150,11 @@
           {title:'نام فروشگاه',input:'sdd23',id_title:'14',id_input:'14'},
         ],
         activeName: 'first',
+        parentValue: 'hello',
+        changedInput: ''
+      }
+    },
 
-      }
-    },
-    methods: {
-      next () {
-        const active = parseInt(this.active)
-        this.active = (active < 2 ? active + 1 : 0).toString()
-      },
-      handleClick(tab, event) {
-        console.log(tab, event);
-      }
-    },
     // created() {
     //   const _this = this;
     //   window.axios.get("/v1/shops/3").then(function (result) {
