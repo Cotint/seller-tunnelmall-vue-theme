@@ -6,12 +6,14 @@
                     label-for="exampleInput2">
                       <!--class="p-2 col-lg-3 col-md-2 col-4">-->
 
-        <b-form-input id="exampleInput2"
+        <b-form-input :id="id"
                       type="text"
                       v-model="form.name"
                       required
-                      :placeholder=input
-                      class="bg-light p-3">
+                      :value=input
+                      class="bg-light p-3"
+                      @change.native="handleDataFc"
+                     >
         </b-form-input>
       </b-form-group>
       <!--<b-button type="submit" variant="primary">Submit</b-button>-->
@@ -22,7 +24,7 @@
 
 <script>
   export default {
-    props:['title','input'],
+    props:['title','input','value','id'],
     data () {
       return {
         form: {
@@ -32,12 +34,13 @@
           checked: []
         },
         show: true,
+        childData: 'hiii'
       }
     },
     methods: {
       onSubmit (evt) {
         evt.preventDefault();
-        alert(JSON.stringify(this.form));
+        // alert(JSON.stringify(this.form));
       },
       onReset (evt) {
         evt.preventDefault();
@@ -49,7 +52,20 @@
         /* Trick to reset/clear native browser form validation state */
         this.show = false;
         this.$nextTick(() => { this.show = true });
+      },
+      clicked(){
+
+      },
+      updateValue: function (value) {
+        this.$emit('input', value);
+      },
+      handleDataFc: function () {
+        var val = event
+        console.log("what is event :",event.target.id)
+        this.$emit('interface',val ) // handle data and give it back to parent by interface
+        // this.$emit('link',event )
       }
     },
+
   }
 </script>
